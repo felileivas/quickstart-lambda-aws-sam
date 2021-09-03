@@ -1,42 +1,28 @@
-import json
+import os
 
-# import requests
+from fastapi import FastAPI, Request
+from mangum import Mangum
+
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+
+stage = os.environ.get('STAGE', None)
+openapi_prefix = f"/{stage}" if stage else "/"
+
+app = FastAPI(title="MyAwesomeApp", openapi_prefix=openapi_prefix)  # Here is the magic
+
+templates = Jinja2Templates(directory="templates")
 
 
-def lambda_handler(event, context):
-    """Sample pure Lambda function
+@app.get("/hello")
+def hello_world():
+    return {"message": "Hello World"}
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
 
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
 
-    context: object, required
-        Lambda Context runtime methods and attributes
+@app.get("/webapp/{id}", response_class=HTMLResponse)
+async def read_item(request: Request, id: str):
+    return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
 
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "hola mundo",
-            # "location": ip.text.replace("\n", "")
-        }),
-    }
+handler = Mangum(app)

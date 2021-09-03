@@ -1,1 +1,5 @@
 requests
+fastapi
+uvicorn
+mangum
+jinja2
