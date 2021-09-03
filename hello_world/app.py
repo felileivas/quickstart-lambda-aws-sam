@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/hello")
 def hello_world():
-    return {"message": "Hello World"}
+    return {"message": "Hola mundo"}
 
 
 
