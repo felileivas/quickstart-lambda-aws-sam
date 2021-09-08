@@ -1,13 +1,34 @@
+name: Deploy in AWS Lambda pipeline
 on:
   push:
     branches:
       - master
 jobs:
+  code-quality:
+    strategy:
+      fail-fast: false
+
   build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+      - name: Run image
+        uses: abatillo/actions-poetry@v2.0.0
+        with:
+          poertry-version: [1.1.8]
+      - name: Install dependecies
+        run: poetry install
+      - name: Run black
+        run: poetry run black . --check
+      - name: Run isort
+        run: poetry run iserto . --check-only --profile black
+      - name: Run flake8
+        run: poetry run flake8 .
+      - name: Run bandit
+        run: poetry run bandit .
+      - name: Run saftey
+        run: poetry run safety check
       - uses: aws-actions/setup-sam@v1
       - uses: aws-actions/configure-aws-credentials@v1
         with:
