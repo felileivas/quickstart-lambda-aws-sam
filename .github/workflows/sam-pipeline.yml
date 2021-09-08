@@ -4,26 +4,6 @@ on:
     branches:
       - master
 jobs:
-
-  code-quality:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - name: Run image
-      uses: abatilo/actions-poetry@v2.0.0
-    - name: Install dependecies
-      run: poetry install
-    - name: Run black
-      run: poetry run black . --check
-    - name: Run isort
-      run: poetry run iserto . --check-only --profile black
-    - name: Run flake8
-      run: poetry run flake8 .
-    - name: Run bandit
-      run: poetry run bandit .
-    - name: Run saftey
-      run: poetry run safety check
     
   build-deploy:
     runs-on: ubuntu-latest

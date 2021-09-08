@@ -1,3 +1,8 @@
 pytest
 pytest-mock
 boto3
+requests
+fastapi
+uvicorn
+mangum
+jinja2
