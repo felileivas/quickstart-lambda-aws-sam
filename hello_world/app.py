@@ -21,7 +21,7 @@ def hello_world():
 
 
 @app.get("/webapp/{id}", response_class=HTMLResponse)
-async def read_item(request: Request, id: str):
+async def read_item(request: Request, id_item: str):
     return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
 
